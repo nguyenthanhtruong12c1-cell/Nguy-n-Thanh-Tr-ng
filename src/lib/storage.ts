@@ -8,7 +8,13 @@ export function loadStudents(): Student[] {
   try {
     const data = localStorage.getItem(STUDENTS_KEY);
     if (data) {
-      return JSON.parse(data);
+      const parsed: Student[] = JSON.parse(data);
+      // Ensure all students have username and password fields
+      return parsed.map(s => ({
+        ...s,
+        username: s.username || s.name,
+        password: s.password || '123456',
+      }));
     }
   } catch (e) {
     console.error("Failed to load students from localStorage", e);
