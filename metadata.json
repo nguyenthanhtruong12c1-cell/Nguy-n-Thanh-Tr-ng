@@ -1,0 +1,6 @@
+{
+  "name": "Trung tâm Chường Teacher",
+  "description": "Hệ thống Quản lý Lớp học, Điểm danh, Thu học phí & Bài tập Học sinh cho Trung tâm Chường Teacher",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
