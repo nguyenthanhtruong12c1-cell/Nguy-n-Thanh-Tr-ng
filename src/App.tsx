@@ -13,9 +13,10 @@ import { StudentMenu } from './components/StudentMenu';
 import { StudentDetailView } from './components/StudentDetailView';
 import { AddStudentForm } from './components/AddStudentForm';
 import { AddTaskForm } from './components/AddTaskForm';
+import { MonthlyScheduleView } from './components/MonthlyScheduleView';
 import { StudentWorkspace } from './components/StudentWorkspace';
 import { BillModal } from './components/BillModal';
-import { ChevronRight, School, Sparkles } from 'lucide-react';
+import { School, Sparkles } from 'lucide-react';
 
 export default function App() {
   const [students, setStudents] = useState<Student[]>(() => loadStudents());
@@ -77,6 +78,18 @@ export default function App() {
     setActiveStudentId(newStudent.id);
     setSelectedStudentForHomework(newStudent.id);
     setTeacherView('students');
+  };
+
+  const handleDeleteStudent = (studentId: number) => {
+    const remaining = students.filter(s => s.id !== studentId);
+    setStudents(remaining);
+
+    if (activeStudentId === studentId) {
+      setActiveStudentId(remaining.length > 0 ? remaining[0].id : null);
+    }
+    if (selectedStudentForHomework === studentId) {
+      setSelectedStudentForHomework(remaining.length > 0 ? remaining[0].id : null);
+    }
   };
 
   const handleUpdateFee = (studentId: number, newFee: number) => {
@@ -216,6 +229,7 @@ export default function App() {
               students={students}
               activeStudentId={activeStudentId}
               onSelectStudent={(id) => setActiveStudentId(id)}
+              onDeleteStudent={handleDeleteStudent}
               teacherView={teacherView}
               onChangeView={(view) => setTeacherView(view)}
             />
@@ -235,12 +249,19 @@ export default function App() {
               <AddStudentForm onAddStudent={handleAddStudent} />
             ) : teacherView === 'addTask' ? (
               <AddTaskForm onAddTask={handleAddTask} />
+            ) : teacherView === 'schedule' ? (
+              <MonthlyScheduleView
+                students={students}
+                onAddAttendance={handleAddAttendance}
+                onDeleteAttendance={handleDeleteAttendance}
+              />
             ) : activeStudentInTeacherMode ? (
               <StudentDetailView
                 student={activeStudentInTeacherMode}
                 onUpdateFee={handleUpdateFee}
                 onAddAttendance={handleAddAttendance}
                 onDeleteAttendance={handleDeleteAttendance}
+                onDeleteStudent={handleDeleteStudent}
                 onOpenBillModal={(id) => setBillModalStudentId(id)}
               />
             ) : (

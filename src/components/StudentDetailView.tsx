@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Student } from '../types';
-import { CreditCard, DollarSign, Calendar, Plus, Trash2, CheckCircle2 } from 'lucide-react';
+import { CreditCard, DollarSign, Calendar, Plus, Trash2, CheckCircle2, UserX } from 'lucide-react';
 
 interface StudentDetailViewProps {
   student: Student;
   onUpdateFee: (studentId: number, newFee: number) => void;
   onAddAttendance: (studentId: number, dateStr: string) => void;
   onDeleteAttendance: (studentId: number, index: number) => void;
+  onDeleteStudent: (studentId: number) => void;
   onOpenBillModal: (studentId: number) => void;
 }
 
@@ -15,6 +16,7 @@ export const StudentDetailView: React.FC<StudentDetailViewProps> = ({
   onUpdateFee,
   onAddAttendance,
   onDeleteAttendance,
+  onDeleteStudent,
   onOpenBillModal,
 }) => {
   const [selectedDate, setSelectedDate] = useState<string>(
@@ -42,6 +44,12 @@ export const StudentDetailView: React.FC<StudentDetailViewProps> = ({
     onAddAttendance(student.id, formattedDate);
   };
 
+  const handleDeleteStudentClick = () => {
+    if (confirm(`Bạn có chắc chắn muốn xóa học sinh "${student.name}" (${student.class}) không? Dữ liệu của học sinh này sẽ bị xóa khỏi hệ thống.`)) {
+      onDeleteStudent(student.id);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-200/80 pb-4 gap-4">
@@ -51,13 +59,25 @@ export const StudentDetailView: React.FC<StudentDetailViewProps> = ({
             {student.class}
           </span>
         </div>
-        <button
-          onClick={() => onOpenBillModal(student.id)}
-          className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 flex items-center gap-2"
-        >
-          <CreditCard className="w-5 h-5" />
-          XUẤT BILL
-        </button>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleDeleteStudentClick}
+            className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-3.5 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-1.5"
+            title="Xóa học sinh này"
+          >
+            <UserX className="w-4 h-4" />
+            <span className="hidden sm:inline">Xóa Học Sinh</span>
+          </button>
+
+          <button
+            onClick={() => onOpenBillModal(student.id)}
+            className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 flex items-center gap-2 text-sm sm:text-base"
+          >
+            <CreditCard className="w-5 h-5" />
+            XUẤT BILL
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

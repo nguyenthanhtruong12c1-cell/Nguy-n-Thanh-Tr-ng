@@ -25,7 +25,7 @@ export interface Student {
 }
 
 export type Role = 'teacher' | 'student';
-export type TeacherView = 'students' | 'addStudent' | 'addTask';
+export type TeacherView = 'students' | 'addStudent' | 'addTask' | 'schedule';
 
 export const CLASS_HIERARCHY: Record<string, string[]> = {
   "Tiểu học": ["Lớp 1", "Lớp 2", "Lớp 3", "Lớp 4", "Lớp 5"],
